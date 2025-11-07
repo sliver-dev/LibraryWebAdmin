@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import BookCard from "@/components/BookCard";
+import ChatBot from "@/components/ChatBot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -30,9 +32,15 @@ const mockReadHistory = [
 ];
 
 export default function UserDashboard() {
+  const [, setLocation] = useLocation();
   const [availableBooks, setAvailableBooks] = useState(mockAvailableBooks);
   const [borrowedBooks, setBorrowedBooks] = useState(mockBorrowedBooks);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLogout = () => {
+    console.log("User logged out");
+    setLocation("/");
+  };
 
   const handleBorrow = (id: string) => {
     const book = availableBooks.find((b) => b.id === id);
@@ -61,7 +69,7 @@ export default function UserDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header userType="user" userName="John Doe" onLogout={() => console.log("Logout")} />
+      <Header userType="user" userName="John Doe" onLogout={handleLogout} />
       <main className="p-6 max-w-7xl mx-auto space-y-8">
         <div>
           <h2 className="text-3xl font-bold">My Library</h2>
@@ -161,6 +169,7 @@ export default function UserDashboard() {
           </TabsContent>
         </Tabs>
       </main>
+      <ChatBot />
     </div>
   );
 }

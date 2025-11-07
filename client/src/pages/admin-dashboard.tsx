@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import StatCard from "@/components/StatCard";
 import UserTableRow from "@/components/UserTableRow";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
+import ChatBot from "@/components/ChatBot";
 import { Users, BookOpen, Book, UserPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -29,6 +31,7 @@ const mockBooks = [
 ];
 
 export default function AdminDashboard() {
+  const [, setLocation] = useLocation();
   const [users, setUsers] = useState(mockUsers);
   const [books, setBooks] = useState(mockBooks);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; type: "user" | "book"; id: string; name: string }>({
@@ -38,6 +41,11 @@ export default function AdminDashboard() {
     name: "",
   });
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleLogout = () => {
+    console.log("Admin logged out");
+    setLocation("/");
+  };
 
   const totalUsers = users.length;
   const totalBooks = books.length;
@@ -87,7 +95,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header userType="admin" userName="Admin User" onLogout={() => console.log("Logout")} />
+      <Header userType="admin" userName="Admin User" onLogout={handleLogout} />
       <main className="p-6 max-w-7xl mx-auto space-y-8">
         <div>
           <h2 className="text-3xl font-bold">Dashboard</h2>
@@ -177,6 +185,7 @@ export default function AdminDashboard() {
         description={`Are you sure you want to delete "${deleteDialog.name}"? This action cannot be undone.`}
         onConfirm={handleConfirmDelete}
       />
+      <ChatBot />
     </div>
   );
 }
