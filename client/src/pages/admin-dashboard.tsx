@@ -5,6 +5,7 @@ import StatCard from "@/components/StatCard";
 import UserTableRow from "@/components/UserTableRow";
 import DeleteConfirmDialog from "@/components/DeleteConfirmDialog";
 import ChatBot from "@/components/ChatBot";
+import AddUserDialog from "@/components/AddUserDialog";
 import { Users, BookOpen, Book, UserPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -86,6 +87,17 @@ export default function AdminDashboard() {
     console.log("Book added:", newBook);
   };
 
+  const handleAddUser = (user: { name: string; username: string; email: string }) => {
+    const newUser = {
+      id: (users.length + 1).toString(),
+      ...user,
+      booksBorrowed: 0,
+      booksRead: 0,
+    };
+    setUsers([...users, newUser]);
+    console.log("User added:", newUser);
+  };
+
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -122,8 +134,9 @@ export default function AdminDashboard() {
 
           <TabsContent value="users" className="space-y-6">
             <Card>
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
                 <CardTitle>Library Users</CardTitle>
+                <AddUserDialog onAdd={handleAddUser} />
               </CardHeader>
               <CardContent>
                 <div className="border rounded-md overflow-hidden">
